@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">EduGaming</string>
+    <string name="sign_up">Sign-up</string>
+    <string name="login">Login</string>
+    <string name="logo_name">EduGaming Logo</string>
+</resources>
