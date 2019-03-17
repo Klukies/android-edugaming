@@ -15,4 +15,8 @@ public class SignUpActivity extends AppCompatActivity {
     public void backToLogin(View view) {
         finish();
     }
+
+    public void signUp(View view) {
+        //todo: sign up
+    }
 }
