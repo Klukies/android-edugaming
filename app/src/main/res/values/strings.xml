@@ -4,6 +4,11 @@
     <string name="login">Login</string>
     <string name="logo_name">EduGaming Logo</string>
     <string name="title_activity_login">Sign in</string>
+    <string name="welcome_message">Welcome</string>
+    <string name="edit_profile">Edit profile</string>
+    <string name="manage_reservations">Manage reservations</string>
+    <string name="logout">Logout</string>
+    <string name="coach_avatar">Coach avatar</string>
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
