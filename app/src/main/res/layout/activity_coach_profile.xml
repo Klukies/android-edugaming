@@ -91,7 +91,7 @@
                         android:id="@+id/editUsername"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
-                        android:layout_marginBottom="16dp"
+                        android:layout_marginBottom="8dp"
                         android:layout_weight="1"
                         android:background="@android:color/background_light"
                         android:ems="10"
@@ -99,7 +99,10 @@
                         android:inputType="textPersonName"
                         android:paddingLeft="5dp"
                         android:paddingRight="0dp"
-                        android:textColor="#FFF" />
+                        android:textColor="@color/colorPrimary"
+                        android:textColorHint="@color/colorPrimary"
+                        android:textSize="18sp"
+                        android:typeface="normal" />
 
                 </TableRow>
 
@@ -114,6 +117,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="-10dp"
                         android:layout_marginRight="-10dp"
+                        android:layout_marginBottom="16dp"
                         android:layout_weight="1"
                         android:backgroundTint="@color/colorSecundary"
                         android:text="Button"
@@ -148,7 +152,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:layout_marginBottom="16dp"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                    />
                 </TableRow>
 
                 <TableRow
@@ -159,7 +164,7 @@
                     tools:layout_editor_absoluteY="434dp">
 
                     <TextView
-                        android:id="@+id/Username"
+                        android:id="@+id/Price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
@@ -176,12 +181,22 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0">
 
-                    <Spinner
-                        android:id="@+id/price_spinner"
+                    <EditText
+                        android:id="@+id/editPrice"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
-                        android:layout_marginBottom="16dp"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:background="@android:color/background_light"
+                        android:ems="10"
+                        android:hint="10"
+                        android:textColorHint="@color/colorPrimary"
+                        android:inputType="number"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="0dp"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="18sp"
+                        android:typeface="normal"
+                        app:fontFamily="@font/karla" />
                 </TableRow>
 
             </TableLayout>

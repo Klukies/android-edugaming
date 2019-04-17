@@ -31,6 +31,7 @@ public class CoachProfileActivity extends AppCompatActivity {
     private EditText editUsername;
     private int current_game_id;
     private Spinner games_spinner;
+    private EditText editPrice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,7 @@ public class CoachProfileActivity extends AppCompatActivity {
         coachImageEdit = (ImageView) findViewById(R.id.coachImageEdit);
         editUsername = (EditText) findViewById(R.id.editUsername);
         games_spinner = (Spinner) findViewById(R.id.game_spinner);
+        editPrice = (EditText) findViewById(R.id.editPrice);
 
         JsonObject coach = getCoach();
         setFields(coach);
@@ -82,6 +84,7 @@ public class CoachProfileActivity extends AppCompatActivity {
         editUsername.setHint(coach.get("username").getAsString());
         current_game_id = coach.get("game_id").getAsInt();
         setGames();
+        editPrice.setHint(coach.get("price").getAsString());
     }
 
     private void setGames() {
@@ -111,7 +114,7 @@ public class CoachProfileActivity extends AppCompatActivity {
             gameNames.add(game.getAsJsonObject().get("title").getAsString());
         }
 
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, gameNames);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, R.layout.games_spinner, gameNames);
 
         // Drop down layout style - list view with radio button
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

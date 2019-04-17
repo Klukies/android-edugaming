@@ -103,7 +103,7 @@ public class NoDefaultSpinner extends android.support.v7.widget.AppCompatSpinner
         protected View getView(int position, View convertView, ViewGroup parent)
                 throws IllegalAccessException {
 
-            if( position<0 ) {
+            if (position < 0) {
                 final TextView v =
                         (TextView) ((LayoutInflater)getContext().getSystemService(
                                 Context.LAYOUT_INFLATER_SERVICE)).inflate(
