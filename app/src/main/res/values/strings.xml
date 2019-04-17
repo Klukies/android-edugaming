@@ -9,6 +9,7 @@
     <string name="manage_reservations">Manage reservations</string>
     <string name="logout">Logout</string>
     <string name="coach_avatar">Coach avatar</string>
+
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
@@ -22,4 +23,10 @@
         completions."
     </string>
     <string name="accessToken">accessToken</string>
+    <!--Strings related to coach profile-->
+    <string name="coach">coach</string>
+    <string name="change_profile_picture">Change profile picture</string>
+    <string name="Username">Username</string>
+    <string name="Game">Game</string>
+    <string name="Price">Price</string>
 </resources>

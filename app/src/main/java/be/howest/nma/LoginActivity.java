@@ -11,6 +11,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
@@ -69,10 +70,18 @@ public class LoginActivity extends AppCompatActivity {
             makeToaster(result.get("error").toString());
         } else {
             storeToken(result.get("accessToken").toString());
+            storeCoach(result.get("coach").toString());
             Intent mainActivity = new Intent(this, MainActivity.class);
             startActivity(mainActivity);
             finish();
         }
+    }
+
+    private void storeCoach(String coach) {
+        SharedPreferences preferences = this.getSharedPreferences("coach", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(getString(R.string.coach), coach);
+        editor.apply();
     }
 
     private void storeToken(String accessToken) {
