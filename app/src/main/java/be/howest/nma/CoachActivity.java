@@ -47,6 +47,15 @@ public class CoachActivity extends AppCompatActivity {
                 .into(coachImage);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        JsonParser parser = new JsonParser();
+        JsonObject coach = parser.parse(getCoachData()).getAsJsonObject();
+        setWelcomeMessage(coach.get("username").getAsString());
+        setCoachImage(coach.get("img_url").getAsString());
+    }
+
     private String getCoachData() {
         SharedPreferences sharedPreferences = getSharedPreferences("coach", Context.MODE_PRIVATE);
         return sharedPreferences.getString(getString(R.string.coach), null);

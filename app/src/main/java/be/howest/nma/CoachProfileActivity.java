@@ -32,6 +32,8 @@ public class CoachProfileActivity extends AppCompatActivity {
     private int current_game_id;
     private Spinner games_spinner;
     private EditText editPrice;
+    private EditText editSummary;
+    private EditText editDescription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +43,8 @@ public class CoachProfileActivity extends AppCompatActivity {
         editUsername = (EditText) findViewById(R.id.editUsername);
         games_spinner = (Spinner) findViewById(R.id.game_spinner);
         editPrice = (EditText) findViewById(R.id.editPrice);
-
+        editSummary = (EditText) findViewById(R.id.editSummary);
+        editDescription = (EditText) findViewById(R.id.editDescription);
         JsonObject coach = getCoach();
         setFields(coach);
     }
@@ -53,38 +56,19 @@ public class CoachProfileActivity extends AppCompatActivity {
         return parser.parse(coachString).getAsJsonObject();
     }
 
-    private void getUser() {
-        SharedPreferences sharedPreferences = getSharedPreferences("authentication", Context.MODE_PRIVATE);
-        String accessToken = sharedPreferences.getString(getString(R.string.accessToken), null);
-
-        Ion.with(this)
-                .load("GET", URLs.COACH_URL)
-                .setHeader("x-access-token", accessToken)
-                .asJsonObject()
-                .setCallback(new FutureCallback<JsonObject>() {
-                    @Override
-                    public void onCompleted(Exception e, JsonObject result) {
-                        if (e != null) {
-                            if (e.getMessage() == null) {
-                                makeToaster("Couldn't connect to api");
-                            } else {
-                                System.out.println(e.getMessage());
-                            }
-                        } else {
-                            setFields(result);
-                        }
-                    }
-                });
-    }
-
     private void setFields(JsonObject coach) {
-        System.out.println(coach);
-        String coach_img_url = URLs.ROOT_URL + coach.get("img_url").getAsString();
-        Picasso.get().load(coach_img_url).error(R.drawable.finished_logo).resize(150,150).centerCrop().into(coachImageEdit);
+        setImage(coach.get("img_url").getAsString());
         editUsername.setHint(coach.get("username").getAsString());
-        current_game_id = coach.get("game_id").getAsInt();
+        current_game_id = coach.get("game_id").getAsInt() - 1;
         setGames();
         editPrice.setHint(coach.get("price").getAsString());
+        setSummary(coach.get("summary"));
+        setDescription(coach.get("description"));
+    }
+
+    private void setImage(String img_url) {
+        String coach_img_url = URLs.ROOT_URL + img_url;
+        Picasso.get().load(coach_img_url).error(R.drawable.finished_logo).resize(150,150).centerCrop().into(coachImageEdit);
     }
 
     private void setGames() {
@@ -107,6 +91,24 @@ public class CoachProfileActivity extends AppCompatActivity {
                 });
     }
 
+    private void setSummary(JsonElement summary) {
+        if (summary.isJsonNull()) {
+            editSummary.setText("");
+            editSummary.setHint("Please enter your summary here.");
+        } else {
+            editSummary.setText(summary.getAsString());
+        }
+    }
+
+    private void setDescription(JsonElement description) {
+        if (description.isJsonNull()) {
+            editDescription.setText("");
+            editDescription.setHint("Please enter your description here.");
+        } else {
+            editDescription.setText(description.getAsString());
+        }
+    }
+
     private void createSpinner(JsonArray games) {
         ArrayList<String> gameNames = new ArrayList<>();
 
@@ -126,8 +128,9 @@ public class CoachProfileActivity extends AppCompatActivity {
         games_spinner.setOnItemSelectedListener (new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected (AdapterView<?> parent, View view, int position, long id) {
-                //todo: Update game_id
-                System.out.println(position + 1);
+                if(position != current_game_id) {
+                    saveGame(position + 1);
+                }
             }
             @Override
             public void onNothingSelected (AdapterView<?> parent) {
@@ -136,8 +139,130 @@ public class CoachProfileActivity extends AppCompatActivity {
         });
     }
 
+    private void saveGame(final int new_game_id) {
+        JsonObject json = new JsonObject();
+        json.addProperty("game_id", new_game_id);
+
+        System.out.println(URLs.COACH_GAME_URL);
+        Ion.with(this)
+                .load("POST", URLs.COACH_GAME_URL)
+                .setHeader("x-access-token", getToken())
+                .setJsonObjectBody(json)
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+                        if (e != null) {
+                            if (e.getMessage() == null) {
+                                makeToaster("Couldn't connect to api");
+                            } else {
+                                System.out.println(e.getMessage());
+                            }
+                        } else {
+                            updateGame(new_game_id);
+                            makeToaster(result.get("success").getAsString());
+                        }
+                    }
+                });
+    }
+
     private void makeToaster(String message) {
         Toast toast = Toast.makeText(this, message, Toast.LENGTH_LONG);
         toast.show();
+    }
+
+    public void saveUsername(View view) {
+        final String new_username = editUsername.getText().toString();
+        if (new_username.equals("")) {
+            makeToaster("Username can't be empty");
+        } else {
+            JsonObject json = new JsonObject();
+            json.addProperty("username", new_username);
+            System.out.println(URLs.COACH_USERNAME_URL);
+
+            Ion.with(this)
+                    .load("POST", URLs.COACH_USERNAME_URL)
+                    .setHeader("x-access-token", getToken())
+                    .setJsonObjectBody(json)
+                    .asJsonObject()
+                    .setCallback(new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
+                            if (e != null) {
+                                if (e.getMessage() == null) {
+                                    makeToaster("Couldn't connect to api");
+                                } else {
+                                    System.out.println(e.getMessage());
+                                }
+                            } else {
+                                makeToaster(result.get("success").getAsString());
+                            }
+                        }
+                    });
+                updateCoachData("username", new_username);
+                editUsername.setHint(new_username);
+        }
+    }
+
+    public void savePrice(View view) {
+        String new_price = editPrice.getText().toString();
+        if (new_price.equals("")) {
+            makeToaster("Price can't be empty");
+        } else {
+            JsonObject json = new JsonObject();
+            json.addProperty("price", new_price);
+            System.out.println(URLs.COACH_PRICE_URL);
+
+            Ion.with(this)
+                    .load("POST", URLs.COACH_PRICE_URL)
+                    .setHeader("x-access-token", getToken())
+                    .setJsonObjectBody(json)
+                    .asJsonObject()
+                    .setCallback(new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
+                            if (e != null) {
+                                if (e.getMessage() == null) {
+                                    makeToaster("Couldn't connect to api");
+                                } else {
+                                    System.out.println(e.getMessage());
+                                }
+                            } else {
+                                makeToaster(result.get("success").getAsString());
+                            }
+                        }
+                    });
+            updateCoachData("price", new_price);
+            editPrice.setHint(new_price);
+        }
+    }
+
+    private void updateCoachData(String key, String value) {
+        JsonObject coach = getCoach();
+        if (key.equals("price")) {
+            int price = Integer.parseInt(value);
+            coach.addProperty(key, price);
+        } else {
+            coach.addProperty(key, value);
+        }
+        storeCoach(coach.toString());
+    }
+
+    private void updateGame(int current_game_id) {
+        JsonObject coach = getCoach();
+        coach.addProperty("game_id", current_game_id);
+        storeCoach(coach.toString());
+    }
+
+    private String getToken() {
+        SharedPreferences sharedPreferences = getSharedPreferences("authentication", Context.MODE_PRIVATE);
+        return sharedPreferences.getString(getString(R.string.accessToken), null);
+    }
+
+    private void storeCoach(String coach) {
+        SharedPreferences preferences = this.getSharedPreferences("coach", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(getString(R.string.coach), coach);
+        editor.apply();
     }
 }

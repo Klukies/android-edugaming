@@ -17,4 +17,7 @@ public class URLs {
     //Coach urls
     public static final String COACH_URL = ROOT_URL + "/coach";
     public static final String GAMES_URL = ROOT_URL + "/games";
+    public static final String COACH_USERNAME_URL = COACH_URL + "/username";
+    public static final String COACH_GAME_URL = COACH_URL + "/game";
+    public static final String COACH_PRICE_URL = COACH_URL + "/price";
 }

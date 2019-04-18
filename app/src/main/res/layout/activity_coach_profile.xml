@@ -95,9 +95,11 @@
                         android:layout_weight="1"
                         android:background="@android:color/background_light"
                         android:ems="10"
-                        android:hint="Username"
+                        android:hint="@string/Username"
                         android:inputType="textPersonName"
+                        android:paddingStart="5dp"
                         android:paddingLeft="5dp"
+                        android:paddingEnd="0dp"
                         android:paddingRight="0dp"
                         android:textColor="@color/colorPrimary"
                         android:textColorHint="@color/colorPrimary"
@@ -112,7 +114,7 @@
                     android:layout_weight="0">
 
                     <Button
-                        android:id="@+id/button"
+                        android:id="@+id/saveUsername"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="-10dp"
@@ -120,7 +122,8 @@
                         android:layout_marginBottom="16dp"
                         android:layout_weight="1"
                         android:backgroundTint="@color/colorSecundary"
-                        android:text="Button"
+                        android:onClick="saveUsername"
+                        android:text="@string/Save"
                         android:textColor="@android:color/white"
                         android:textSize="18sp" />
                 </TableRow>
@@ -151,9 +154,8 @@
                         android:id="@+id/game_spinner"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
-                        android:layout_marginBottom="16dp"
-                        android:layout_weight="1"
-                    />
+                        android:layout_marginBottom="24dp"
+                        android:layout_weight="1" />
                 </TableRow>
 
                 <TableRow
@@ -179,6 +181,7 @@
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginBottom="8dp"
                     android:layout_weight="0">
 
                     <EditText
@@ -188,15 +191,152 @@
                         android:layout_weight="1"
                         android:background="@android:color/background_light"
                         android:ems="10"
-                        android:hint="10"
-                        android:textColorHint="@color/colorPrimary"
+                        android:hint="@string/PriceHint"
                         android:inputType="number"
                         android:paddingLeft="5dp"
                         android:paddingRight="0dp"
                         android:textColor="@color/colorPrimary"
+                        android:textColorHint="@color/colorPrimary"
                         android:textSize="18sp"
                         android:typeface="normal"
                         app:fontFamily="@font/karla" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0">
+
+                    <Button
+                        android:id="@+id/savePrice"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="-10dp"
+                        android:layout_marginRight="-10dp"
+                        android:layout_marginBottom="16dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/colorSecundary"
+                        android:onClick="savePrice"
+                        android:text="@string/Save"
+                        android:textColor="@android:color/white"
+                        android:textSize="18sp" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0"
+                    tools:layout_editor_absoluteX="32dp"
+                    tools:layout_editor_absoluteY="434dp">
+
+                    <TextView
+                        android:id="@+id/Summary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/Summary"
+                        android:textColor="#FFF"
+                        android:textSize="18sp"
+                        android:typeface="normal"
+                        app:fontFamily="@font/karla"
+                        tools:layout_editor_absoluteX="70dp"
+                        tools:layout_editor_absoluteY="0dp" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0">
+
+                    <EditText
+                        android:id="@+id/editSummary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="80dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_weight="1"
+                        android:background="@color/colorText"
+                        android:ems="10"
+                        android:gravity="top"
+                        android:inputType="textMultiLine"
+                        android:maxLength="117"
+                        android:textColor="@color/colorPrimary" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0">
+
+                    <Button
+                        android:id="@+id/saveSummary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="-10dp"
+                        android:layout_marginRight="-10dp"
+                        android:layout_marginBottom="16dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/colorSecundary"
+                        android:text="@string/Save"
+                        android:textColor="@android:color/white"
+                        android:textSize="18sp" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0"
+                    tools:layout_editor_absoluteX="32dp"
+                    tools:layout_editor_absoluteY="434dp">
+
+                    <TextView
+                        android:id="@+id/Description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:layout_weight="1"
+                        android:text="@string/Description"
+                        android:textColor="#FFF"
+                        android:textSize="18sp"
+                        android:typeface="normal"
+                        app:fontFamily="@font/karla" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0">
+
+                    <EditText
+                        android:id="@+id/editDescription"
+                        android:layout_width="wrap_content"
+                        android:layout_height="160dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_weight="1"
+                        android:background="@color/colorText"
+                        android:ems="10"
+                        android:gravity="top"
+                        android:inputType="textMultiLine"
+                        android:maxLength="234"
+                        android:textColor="@color/colorPrimary" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0">
+
+                    <Button
+                        android:id="@+id/saveDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="-10dp"
+                        android:layout_marginRight="-10dp"
+                        android:layout_marginBottom="16dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/colorSecundary"
+                        android:text="@string/Save"
+                        android:textColor="@android:color/white"
+                        android:textSize="18sp" />
                 </TableRow>
 
             </TableLayout>
