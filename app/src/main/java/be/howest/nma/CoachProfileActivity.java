@@ -174,7 +174,7 @@ public class CoachProfileActivity extends AppCompatActivity {
     public void saveUsername(View view) {
         final String new_username = editUsername.getText().toString();
         if (new_username.equals("")) {
-            makeToaster("Username can't be empty");
+            editUsername.setError("Username can't be empty");
         } else {
             JsonObject json = new JsonObject();
             json.addProperty("username", new_username);
@@ -207,12 +207,12 @@ public class CoachProfileActivity extends AppCompatActivity {
     public void savePrice(View view) {
         String new_price = editPrice.getText().toString();
         if (new_price.equals("")) {
-            makeToaster("Price can't be empty");
+            editPrice.setError("Price can't be empty.");
         } else {
             JsonObject json = new JsonObject();
             json.addProperty("price", new_price);
-            System.out.println(URLs.COACH_PRICE_URL);
 
+            System.out.println(URLs.COACH_PRICE_URL);
             Ion.with(this)
                     .load("POST", URLs.COACH_PRICE_URL)
                     .setHeader("x-access-token", getToken())
@@ -235,6 +235,78 @@ public class CoachProfileActivity extends AppCompatActivity {
             updateCoachData("price", new_price);
             editPrice.setHint(new_price);
         }
+    }
+
+    public void saveSummary(View view) {
+        String new_summary = editSummary.getText().toString();
+
+        if (new_summary.equals("")) {
+            editSummary.setError("Summary can't be empty");
+        } else {
+            JsonObject json = new JsonObject();
+            json.addProperty("summary", new_summary);
+
+            System.out.println(URLs.COACH_SUMMARY_URL);
+            Ion.with(this)
+                    .load("POST", URLs.COACH_SUMMARY_URL)
+                    .setHeader("x-access-token", getToken())
+                    .setJsonObjectBody(json)
+                    .asJsonObject()
+                    .setCallback(new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
+                            if (e != null) {
+                                if (e.getMessage() == null) {
+                                    makeToaster("Couldn't connect to the api");
+                                } else {
+                                    System.out.println(e.getMessage());
+                                }
+                            } else {
+                                makeToaster(result.get("success").getAsString());
+                            }
+                        }
+                    });
+            updateCoachData("summary", new_summary);
+            editSummary.setText(new_summary);
+        }
+    }
+
+    public void saveDescription(View view) {
+        String new_description = editDescription.getText().toString();
+
+        if (new_description.equals("")) {
+            editDescription.setError("Description can't be empty");
+        } else {
+            createPostRequest(new_description, URLs.COACH_DESCRIPTION_URL, "description", editDescription);
+        }
+    }
+
+    private void createPostRequest(String data, String url, String coach_key, EditText edit_text) {
+        JsonObject json = new JsonObject();
+        json.addProperty(coach_key, data);
+
+        System.out.println(url);
+        Ion.with(this)
+                .load("POST", url)
+                .setHeader("x-access-token", getToken())
+                .setJsonObjectBody(json)
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+                        if (e != null) {
+                            if (e.getMessage() == null) {
+                                makeToaster("Couldn't connect to api");
+                            } else {
+                                System.out.println(e.getMessage());
+                            }
+                        } else {
+                            makeToaster(result.get("success").getAsString());
+                        }
+                    }
+                });
+        updateCoachData(coach_key, data);
+        edit_text.setText(data);
     }
 
     private void updateCoachData(String key, String value) {

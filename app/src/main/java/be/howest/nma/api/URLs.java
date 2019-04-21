@@ -15,9 +15,11 @@ public class URLs {
     public static final String REGISTER_URL = ROOT_URL + "/auth/register";
 
     //Coach urls
-    public static final String COACH_URL = ROOT_URL + "/coach";
+    private static final String COACH_URL = ROOT_URL + "/coach";
     public static final String GAMES_URL = ROOT_URL + "/games";
     public static final String COACH_USERNAME_URL = COACH_URL + "/username";
     public static final String COACH_GAME_URL = COACH_URL + "/game";
     public static final String COACH_PRICE_URL = COACH_URL + "/price";
+    public static final String COACH_SUMMARY_URL = COACH_URL + "/summary";
+    public static final String COACH_DESCRIPTION_URL = COACH_URL + "/description";
 }

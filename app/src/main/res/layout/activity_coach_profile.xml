@@ -276,6 +276,7 @@
                         android:layout_marginBottom="16dp"
                         android:layout_weight="1"
                         android:backgroundTint="@color/colorSecundary"
+                        android:onClick="saveSummary"
                         android:text="@string/Save"
                         android:textColor="@android:color/white"
                         android:textSize="18sp" />
@@ -334,6 +335,7 @@
                         android:layout_marginBottom="16dp"
                         android:layout_weight="1"
                         android:backgroundTint="@color/colorSecundary"
+                        android:onClick="saveDescription"
                         android:text="@string/Save"
                         android:textColor="@android:color/white"
                         android:textSize="18sp" />
