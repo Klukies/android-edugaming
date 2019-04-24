@@ -5,10 +5,10 @@ public class URLs {
     //private static final String ROOT_URL = "http://192.168.1.29:3000";
 
     //gf
-    public static final String ROOT_URL = "http://192.168.0.17:3000";
+    //public static final String ROOT_URL = "http://192.168.0.17:3000";
 
     //device
-    //public static final String ROOT_URL = "http://10.0.2.2:3000";
+    public static final String ROOT_URL = "http://10.0.2.2:3000";
 
     //Auth urls
     public static final String LOGIN_URL= ROOT_URL + "/auth/login";
