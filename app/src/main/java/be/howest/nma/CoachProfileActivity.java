@@ -1,14 +1,20 @@
 package be.howest.nma;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -22,18 +28,22 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import be.howest.nma.api.URLs;
 
 public class CoachProfileActivity extends AppCompatActivity {
     private ImageView coachImageEdit;
-    private EditText editUsername;
     private int current_game_id;
     private Spinner games_spinner;
-    private EditText editPrice;
-    private EditText editSummary;
-    private EditText editDescription;
+    private Button chooseBtn, uploadBtn;
+    private EditText editUsername, editPrice, editSummary, editDescription;
+    private final int IMG_REQUEST = 1;
+    private Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,48 +183,34 @@ public class CoachProfileActivity extends AppCompatActivity {
 
     public void saveUsername(View view) {
         final String new_username = editUsername.getText().toString();
-        if (new_username.equals("")) {
-            editUsername.setError("Username can't be empty");
-        } else {
-            JsonObject json = new JsonObject();
-            json.addProperty("username", new_username);
-            System.out.println(URLs.COACH_USERNAME_URL);
-
-            Ion.with(this)
-                    .load("POST", URLs.COACH_USERNAME_URL)
-                    .setHeader("x-access-token", getToken())
-                    .setJsonObjectBody(json)
-                    .asJsonObject()
-                    .setCallback(new FutureCallback<JsonObject>() {
-                        @Override
-                        public void onCompleted(Exception e, JsonObject result) {
-                            if (e != null) {
-                                if (e.getMessage() == null) {
-                                    makeToaster("Couldn't connect to api");
-                                } else {
-                                    System.out.println(e.getMessage());
-                                }
-                            } else {
-                                makeToaster(result.get("success").getAsString());
-                            }
-                        }
-                    });
-                updateCoachData("username", new_username);
-                editUsername.setHint(new_username);
-        }
+        createPostRequest(new_username, URLs.COACH_USERNAME_URL, "username", editUsername);
     }
 
     public void savePrice(View view) {
         String new_price = editPrice.getText().toString();
-        if (new_price.equals("")) {
-            editPrice.setError("Price can't be empty.");
+        createPostRequest(new_price, URLs.COACH_PRICE_URL, "price", editPrice);
+    }
+
+    public void saveSummary(View view) {
+        String new_summary = editSummary.getText().toString();
+        createPostRequest(new_summary, URLs.COACH_SUMMARY_URL, "summary", editSummary);
+    }
+
+    public void saveDescription(View view) {
+        String new_description = editDescription.getText().toString();
+        createPostRequest(new_description, URLs.COACH_DESCRIPTION_URL, "description", editDescription);
+    }
+
+    private void createPostRequest(String data, String url, String coach_key, EditText edit_text) {
+        if (data.equals("")) {
+            edit_text.setError(coach_key + " can't be empty");
         } else {
             JsonObject json = new JsonObject();
-            json.addProperty("price", new_price);
+            json.addProperty(coach_key, data);
 
-            System.out.println(URLs.COACH_PRICE_URL);
+            System.out.println(url);
             Ion.with(this)
-                    .load("POST", URLs.COACH_PRICE_URL)
+                    .load("POST", url)
                     .setHeader("x-access-token", getToken())
                     .setJsonObjectBody(json)
                     .asJsonObject()
@@ -232,81 +228,9 @@ public class CoachProfileActivity extends AppCompatActivity {
                             }
                         }
                     });
-            updateCoachData("price", new_price);
-            editPrice.setHint(new_price);
+            updateCoachData(coach_key, data);
+            edit_text.setText(data);
         }
-    }
-
-    public void saveSummary(View view) {
-        String new_summary = editSummary.getText().toString();
-
-        if (new_summary.equals("")) {
-            editSummary.setError("Summary can't be empty");
-        } else {
-            JsonObject json = new JsonObject();
-            json.addProperty("summary", new_summary);
-
-            System.out.println(URLs.COACH_SUMMARY_URL);
-            Ion.with(this)
-                    .load("POST", URLs.COACH_SUMMARY_URL)
-                    .setHeader("x-access-token", getToken())
-                    .setJsonObjectBody(json)
-                    .asJsonObject()
-                    .setCallback(new FutureCallback<JsonObject>() {
-                        @Override
-                        public void onCompleted(Exception e, JsonObject result) {
-                            if (e != null) {
-                                if (e.getMessage() == null) {
-                                    makeToaster("Couldn't connect to the api");
-                                } else {
-                                    System.out.println(e.getMessage());
-                                }
-                            } else {
-                                makeToaster(result.get("success").getAsString());
-                            }
-                        }
-                    });
-            updateCoachData("summary", new_summary);
-            editSummary.setText(new_summary);
-        }
-    }
-
-    public void saveDescription(View view) {
-        String new_description = editDescription.getText().toString();
-
-        if (new_description.equals("")) {
-            editDescription.setError("Description can't be empty");
-        } else {
-            createPostRequest(new_description, URLs.COACH_DESCRIPTION_URL, "description", editDescription);
-        }
-    }
-
-    private void createPostRequest(String data, String url, String coach_key, EditText edit_text) {
-        JsonObject json = new JsonObject();
-        json.addProperty(coach_key, data);
-
-        System.out.println(url);
-        Ion.with(this)
-                .load("POST", url)
-                .setHeader("x-access-token", getToken())
-                .setJsonObjectBody(json)
-                .asJsonObject()
-                .setCallback(new FutureCallback<JsonObject>() {
-                    @Override
-                    public void onCompleted(Exception e, JsonObject result) {
-                        if (e != null) {
-                            if (e.getMessage() == null) {
-                                makeToaster("Couldn't connect to api");
-                            } else {
-                                System.out.println(e.getMessage());
-                            }
-                        } else {
-                            makeToaster(result.get("success").getAsString());
-                        }
-                    }
-                });
-        updateCoachData(coach_key, data);
-        edit_text.setText(data);
     }
 
     private void updateCoachData(String key, String value) {
@@ -336,5 +260,56 @@ public class CoachProfileActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(getString(R.string.coach), coach);
         editor.apply();
+    }
+
+    public void chooseNewPicture(View view) {
+        Intent intent = new Intent();
+        intent.setType("image/*");;
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, IMG_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == IMG_REQUEST && resultCode == RESULT_OK && data != null) {
+            Uri path = data.getData();
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), path);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            JsonObject json = new JsonObject();
+            json.addProperty("image", imageToString(bitmap));
+
+            Ion.with(this)
+                    .load("POST", URLs.COACH_IMAGE_URL)
+                    .setHeader("x-access-token", getToken())
+                    .setJsonObjectBody(json)
+                    .asJsonObject()
+                    .setCallback(new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
+                            if (e != null) {
+                                if (e.getMessage() == null) {
+                                    makeToaster("Couldn't connect to api");
+                                } else {
+                                    System.out.println(e.getMessage());
+                                }
+                            } else {
+                                makeToaster(result.get("success").getAsString());
+                                updateCoachData("img_url", result.get("img_url").getAsString());
+                            }
+                        }
+                    });
+            coachImageEdit.setImageBitmap(bitmap);
+        }
+    }
+
+    private String imageToString(Bitmap bitmap) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.WEBP, 100, byteArrayOutputStream);
+        byte[] imgBytes = byteArrayOutputStream.toByteArray();
+        return Base64.encodeToString(imgBytes, Base64.DEFAULT);
     }
 }

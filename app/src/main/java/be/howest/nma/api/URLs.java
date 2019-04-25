@@ -22,4 +22,5 @@ public class URLs {
     public static final String COACH_PRICE_URL = COACH_URL + "/price";
     public static final String COACH_SUMMARY_URL = COACH_URL + "/summary";
     public static final String COACH_DESCRIPTION_URL = COACH_URL + "/description";
+    public static final String COACH_IMAGE_URL = COACH_URL + "/image";
 }
