@@ -23,4 +23,7 @@ public class URLs {
     public static final String COACH_SUMMARY_URL = COACH_URL + "/summary";
     public static final String COACH_DESCRIPTION_URL = COACH_URL + "/description";
     public static final String COACH_IMAGE_URL = COACH_URL + "/image";
+
+    //Reservation urls
+    public static final String RESERVATIONS_URL = ROOT_URL + "/reservations";
 }

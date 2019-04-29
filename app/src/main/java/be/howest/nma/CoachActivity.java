@@ -75,4 +75,9 @@ public class CoachActivity extends AppCompatActivity {
         Intent intent = new Intent(this, CoachProfileActivity.class);
         startActivity(intent);
     }
+
+    public void loadReservations(View view) {
+        Intent intent = new Intent(this, CoachReservationsActivity.class);
+        startActivity(intent);
+    }
 }

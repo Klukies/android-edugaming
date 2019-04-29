@@ -16,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".CoachProfileActivity"></activity>
+        <activity android:name=".CoachReservationsActivity"></activity>
+        <activity android:name=".CoachProfileActivity" />
         <activity android:name=".CoachActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
