@@ -35,4 +35,6 @@
     <string name="Description">Description</string>
     <string name="Save">Save</string>
     <string name="tokenHeader">x-access-token</string>
+    <string name="Cancel">Cancel</string>
+    <string name="Confirm">Confirm</string>
 </resources>

@@ -40,7 +40,6 @@ public class CoachProfileActivity extends AppCompatActivity {
     private ImageView coachImageEdit;
     private int current_game_id;
     private Spinner games_spinner;
-    private Button chooseBtn, uploadBtn;
     private EditText editUsername, editPrice, editSummary, editDescription;
     private final int IMG_REQUEST = 1;
     private Bitmap bitmap;
