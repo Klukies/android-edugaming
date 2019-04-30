@@ -2,12 +2,10 @@ package be.howest.nma;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.widget.Toast;
 
 import com.google.gson.JsonArray;
@@ -72,7 +70,7 @@ public class CoachReservationsActivity extends AppCompatActivity {
     }
 
     private void setRvAdapter(List<Reservation> reservationList) {
-        RecyclerViewAdapter myAdapter = new RecyclerViewAdapter(this, reservationList);
+        RecyclerViewAdapter myAdapter = new RecyclerViewAdapter(this, reservationList, getToken());
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(myAdapter);
     }
