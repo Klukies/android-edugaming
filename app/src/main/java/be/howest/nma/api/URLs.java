@@ -27,4 +27,5 @@ public class URLs {
     //Reservation urls
     public static final String RESERVATIONS_URL = ROOT_URL + "/reservations";
     public static final String CANCEL_RESERVATION_URL = RESERVATIONS_URL + "/cancel";
+    public static final String CONFIRM_RESERVATION_URL = RESERVATIONS_URL + "/confirm";
 }

@@ -1,12 +1,14 @@
 package be.howest.nma.classes;
 
 public class Reservation {
+    private int user_id;
     private String reservation_time;
     private boolean confirmed;
     private String username;
     private String email;
 
-    public Reservation(String reservation_time, boolean confirmed, String username, String email) {
+    public Reservation(int user_id, String reservation_time, boolean confirmed, String username, String email) {
+        this.user_id = user_id;
         this.reservation_time = reservation_time;
         this.confirmed = confirmed;
         this.username = username;
@@ -31,5 +33,9 @@ public class Reservation {
 
     public String getEmail() {
         return email;
+    }
+
+    public int getUser_id() {
+        return user_id;
     }
 }

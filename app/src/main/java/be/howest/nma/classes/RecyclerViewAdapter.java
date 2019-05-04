@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
@@ -41,29 +42,42 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, final int position, List<Object> payloads) {
+        if (payloads.isEmpty()) {
+            onBindViewHolder(holder, position);
+        } else {
+            holder.reservationData.setText(getUserdata(position));
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
         holder.reservationData.setText(getUserdata(position));
         holder.cancelButton.setText(ctx.getString(R.string.Cancel));
         holder.confirmationButton.setText(ctx.getString(R.string.Confirm));
         holder.cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String username = mData.get(position).getUsername();
+                int user_id = mData.get(position).getUser_id();
                 String reservation_time = mData.get(position).getReservation_time();
-                cancelReservation(username, reservation_time);
+                handleReservation(createJsonReservationObject(user_id, reservation_time, false), position);
             }
         });
-        //todo: set user_id, and use onclicklisteners to send cancel/confirm to node
+        holder.confirmationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int user_id = mData.get(position).getUser_id();
+                String reservation_time = mData.get(position).getReservation_time();
+                handleReservation(createJsonReservationObject(user_id, reservation_time, true), position);
+            }
+        });
     }
 
-    private void cancelReservation(String username, String reservation_time) {
-        JsonObject json = new JsonObject();
-        json.addProperty("username", username);
-        json.addProperty("reservation_time", reservation_time);
+    private void handleReservation(final JsonObject reservation_data, final int position) {
         Ion.with(ctx)
                 .load("POST", URLs.CANCEL_RESERVATION_URL)
                 .setHeader("x-access-token", accessToken)
-                .setJsonObjectBody(json)
+                .setJsonObjectBody(reservation_data)
                 .asJsonObject()
                 .setCallback(new FutureCallback<JsonObject>() {
                     @Override
@@ -76,21 +90,22 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                             }
                         } else {
                             makeToaster(result.get("success").getAsString());
+                            mData.get(position).setConfirmed(reservation_data.get("confirmed").getAsBoolean());
+                            notifyItemRangeChanged(position, getItemCount(), reservation_data.get("confirmed").getAsBoolean());
                         }
                     }
                 });
     }
 
-    private void makeToaster(String message) {
-        Toast toast = Toast.makeText(ctx, message, Toast.LENGTH_LONG);
-        toast.show();
-    }
-
     private String getUserdata(final int position) {
+        String confirmed = "not confirmed";
+        if (mData.get(position).isConfirmed()) {
+            confirmed = "confirmed";
+        }
         String username = mData.get(position).getUsername().split("\"")[1];
         String reservation_time = mData.get(position).getReservation_time().split("\"")[1];
         reservation_time = reservation_time.split("T")[0] + " " + reservation_time.split("T")[1].substring(0, 5);
-        return username + " at " + reservation_time;
+        return username + " at " + reservation_time + " (" + confirmed + ")";
     }
 
     @Override
@@ -109,5 +124,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             cancelButton = (Button) itemView.findViewById(R.id.cancelButton);
             confirmationButton = (Button) itemView.findViewById(R.id.confirmButton);
         }
+    }
+
+    private void makeToaster(String message) {
+        Toast toast = Toast.makeText(ctx, message, Toast.LENGTH_LONG);
+        toast.show();
+    }
+
+    private JsonObject createJsonReservationObject(int user_id, String reservation_time, boolean confirmed) {
+        JsonObject json = new JsonObject();
+        json.addProperty("reservation_time", reservation_time);
+        json.addProperty("user_id", user_id);
+        json.addProperty("confirmed", confirmed);
+        return json;
     }
 }

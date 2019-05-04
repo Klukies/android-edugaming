@@ -60,6 +60,7 @@ public class CoachReservationsActivity extends AppCompatActivity {
         for (JsonElement reservationElement : reservations) {
             JsonObject reservation = reservationElement.getAsJsonObject();
             reservationList.add(new Reservation(
+                    Integer.parseInt(reservation.get("user_id").toString()),
                     reservation.get("reservation_time").toString(),
                     reservation.get("confirmed").getAsBoolean(),
                     reservation.get("user").getAsJsonObject().get("name").toString(),
