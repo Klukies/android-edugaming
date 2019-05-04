@@ -1,7 +1,6 @@
 package be.howest.nma.classes;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,7 +10,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
@@ -75,7 +73,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private void handleReservation(final JsonObject reservation_data, final int position) {
         Ion.with(ctx)
-                .load("POST", URLs.CANCEL_RESERVATION_URL)
+                .load("POST", URLs.CONFIRMATION_RESERVATION_URL)
                 .setHeader("x-access-token", accessToken)
                 .setJsonObjectBody(reservation_data)
                 .asJsonObject()
